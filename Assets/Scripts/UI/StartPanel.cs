@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Protocol.Code;
+using Protocol.Dto;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,16 +28,16 @@ public class StartPanel : UIBase
 
     private Button _loginBtn;
     private Button _closeBtn;
-    private InputField _accountInputField;
-    private InputField _passwordInputField;
+    private TMP_InputField _accountInputField;
+    private TMP_InputField _passwordInputField;
 
     // Use this for initialization
     void Start()
     {
         _loginBtn = transform.Find("LoginBtn").GetComponent<Button>();
         _closeBtn = transform.Find("CloseBtn").GetComponent<Button>();
-        _accountInputField = transform.Find("AccountInput").GetComponent<InputField>();
-        _passwordInputField = transform.Find("PassWardInputField").GetComponent<InputField>();
+        _accountInputField = transform.Find("AccountInputField").GetComponent<TMP_InputField>();
+        _passwordInputField = transform.Find("PasswordInputField").GetComponent<TMP_InputField>();
 
         _loginBtn.onClick.AddListener(OnLoginClick);
         _closeBtn.onClick.AddListener(OnCloseClick);
@@ -51,6 +54,8 @@ public class StartPanel : UIBase
         _closeBtn.onClick.RemoveListener(OnCloseClick);
     }
 
+    // private AccountDto _dto = new AccountDto();
+    // private SocketMsg _socketMsg = new SocketMsg();
     /// <summary>
     /// 登录按钮的点击事件处理
     /// </summary>
@@ -64,7 +69,14 @@ public class StartPanel : UIBase
             return;
         
         //需要和服务器交互了
-        //TODO
+        AccountDto dto = new AccountDto(_accountInputField.text, _passwordInputField.text);
+        SocketMsg socketMsg = new SocketMsg(OpCode.ACCOUNT, AccountCode.LOGIN, dto);
+        // _dto.Account = _accountInputField.text;
+        // _dto.Password = _accountInputField.text;
+        // _socketMsg.OpCode = OpCode.ACCOUNT;
+        // _socketMsg.SubCode = AccountCode.REGISTER_CREQ;
+        // _socketMsg.Value = _dto;
+        Dispatch(AreaCode.NET,0,socketMsg);
     }
 
     private void OnCloseClick()

@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Protocol.Code;
+using Protocol.Dto;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,18 +27,18 @@ public class RegisterPanel : UIBase
 
     private Button _registerBtn;
     private Button _closeBtn;
-    private InputField _accountInput;
-    private InputField _passwordInput;
-    private InputField _repeatInput;
+    private TMP_InputField _accountInputField;
+    private TMP_InputField _passwordInputField;
+    private TMP_InputField _repeatInputField;
 
     // Use this for initialization
     void Start()
     {
         _registerBtn = transform.Find("RegisterBtn").GetComponent<Button>();
         _closeBtn = transform.Find("CloseBtn").GetComponent<Button>();
-        _accountInput = transform.Find("AccountInput").GetComponent<InputField>();
-        _passwordInput = transform.Find("PassWardInputField").GetComponent<InputField>();
-        _repeatInput = transform.Find("RepeatInput").GetComponent<InputField>();
+        _accountInputField = transform.Find("AccountInputField").GetComponent<TMP_InputField>();
+        _passwordInputField = transform.Find("PasswordInputField").GetComponent<TMP_InputField>();
+        _repeatInputField = transform.Find("RepeatInputField").GetComponent<TMP_InputField>();
 
         _closeBtn.onClick.AddListener(OnCloseClick);
         _registerBtn.onClick.AddListener(OnRegisterClick);
@@ -56,18 +59,21 @@ public class RegisterPanel : UIBase
     /// </summary>
     private void OnRegisterClick()
     {
-        if (string.IsNullOrEmpty(_accountInput.text))
+        if (string.IsNullOrEmpty(_accountInputField.text))
             return;
-        if (string.IsNullOrEmpty(_passwordInput.text)
-            || _passwordInput.text.Length < 4
-            || _passwordInput.text.Length > 16)
+        if (string.IsNullOrEmpty(_passwordInputField.text)
+            || _passwordInputField.text.Length < 4
+            || _passwordInputField.text.Length > 16)
             return;
-        if (string.IsNullOrEmpty(_repeatInput.text)
-            || _repeatInput.text != _passwordInput.text)
+        if (string.IsNullOrEmpty(_repeatInputField.text)
+            || _repeatInputField.text != _passwordInputField.text)
             return;
 
         //需要和服务器交互了
         //TODO
+        AccountDto dto = new AccountDto(_accountInputField.text, _passwordInputField.text);
+        SocketMsg socketMsg = new SocketMsg(OpCode.ACCOUNT, AccountCode.REGISTER_CLIENT_REQUEST, dto);
+        Dispatch(AreaCode.NET,0,socketMsg);
     }
 
     private void OnCloseClick()

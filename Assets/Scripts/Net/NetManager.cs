@@ -11,29 +11,42 @@ public class NetManager : ManagerBase
     private void Awake()
     {
         Instance = this;
+        Add(0,this);
+    }
+
+    public override void Execute(int eventCode, object message)
+    {
+        switch (eventCode)
+        {
+            case 0:
+                _client.Send((SocketMsg)message);
+                break;
+            default:
+                break;
+        }
     }
 
     private void Start()
     {
-        Connected("127.0.0.1", 6666);
+        Connected();
     }
 
-    private ClientPeer client;
+    private ClientPeer _client = new ClientPeer("127.0.0.1", 6666);
 
-    public void Connected(string ip, int port)
+    public void Connected()
     {
-        client = new ClientPeer(ip, port);
+        _client.Connect();
     }
 
     private void Update()
     {
-        if (client == null)
+        if (_client == null)
             return;
 
-        while (client.SocketMsgQueue.Count > 0)
+        while (_client.SocketMsgQueue.Count > 0)
         {
-            SocketMsg msg = client.SocketMsgQueue.Dequeue();
-            //TOTO 操作这个msg
+            SocketMsg msg = _client.SocketMsgQueue.Dequeue();
+            //TODO 操作这个msg
         }
     }
 }

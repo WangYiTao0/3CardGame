@@ -2108,7 +2108,7 @@ GameObject:
   - component: {fileID: 525173854}
   - component: {fileID: 525173853}
   m_Layer: 5
-  m_Name: AccountInput
+  m_Name: AccountInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3271,7 +3271,7 @@ GameObject:
   - component: {fileID: 1027754344}
   - component: {fileID: 1027754343}
   m_Layer: 5
-  m_Name: PassWardInputField
+  m_Name: PasswordInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3447,7 +3447,7 @@ GameObject:
   - component: {fileID: 1142043857}
   - component: {fileID: 1142043856}
   m_Layer: 5
-  m_Name: RepeatInput
+  m_Name: RepeatInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3623,7 +3623,7 @@ GameObject:
   - component: {fileID: 1174771015}
   - component: {fileID: 1174771014}
   m_Layer: 5
-  m_Name: AccountInput
+  m_Name: AccountInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5396,7 +5396,7 @@ GameObject:
   - component: {fileID: 1922206185}
   - component: {fileID: 1922206184}
   m_Layer: 5
-  m_Name: PassWardInputField
+  m_Name: PasswordInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5409,7 +5409,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1922206182}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5420,7 +5420,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 56.1, y: -20}
+  m_AnchoredPosition: {x: 56.100006, y: -20}
   m_SizeDelta: {x: 200, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1922206184

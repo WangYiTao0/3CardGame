@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
@@ -9,7 +8,9 @@ using UnityEngine;
 /// </summary>
 public class ClientPeer
 {
-    private Socket socket;
+    private Socket _socket;
+    private string _ip;
+    private int _port;
 
     /// <summary>
     /// 构造连接对象
@@ -20,11 +21,10 @@ public class ClientPeer
     {
         try
         {
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(ip, port);
-            Debug.Log("连接服务器成功！");
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _ip = ip;
+            _port = port;
 
-            startReceive();
         }
         catch (System.Exception e)
         {
@@ -32,50 +32,66 @@ public class ClientPeer
         }
     }
 
+    public void Connect()
+    {
+        try
+        {
+            _socket.Connect(_ip, _port);
+            Debug.Log("连接服务器成功！");
 
+            StartReceive();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.Message);
+            throw;
+        }
+
+    }
+    
     #region 接受数据
 
     //接受的数据缓冲区
-    private byte[] receiveBuffer = new byte[1024];
+    private byte[] _receiveBuffer = new byte[1024];
 
     /// <summary>
     /// 一旦接收到数据 就存到缓存区里面
     /// </summary>
-    private List<byte> dataCache = new List<byte>();
+    private List<byte> _dataCache = new List<byte>();
 
-    private bool isProcessReceive = false;
+    private bool _isProcessReceive = false;
 
     public Queue<SocketMsg> SocketMsgQueue= new Queue<SocketMsg>();
 
     /// <summary>
     /// 开始异步接受数据
     /// </summary>
-    private void startReceive()
+    private void StartReceive()
     {
-        if (socket == null && socket.Connected)
+        if (_socket == null && _socket.Connected)
         {
             Debug.LogError("没有连接成功，无法发送数据");
             return;
         }
-
-        socket.BeginReceive(receiveBuffer, 0, 1024, SocketFlags.None, receiveCallBack, socket);
+        //收到消息后调用回调
+        _socket.BeginReceive(_receiveBuffer, 0, 1024, SocketFlags.None, ReceiveCallBack, _socket);
     }
 
     /// <summary>
     /// 收到消息的回调
     /// </summary>
-    private void receiveCallBack(IAsyncResult ar)
+    private void ReceiveCallBack(IAsyncResult ar)
     {
         try
         {
-            int length = socket.EndReceive(ar);
+            int length = _socket.EndReceive(ar);
             byte[] tmpByteArray = new byte[length];
-            Buffer.BlockCopy(receiveBuffer, 0, tmpByteArray, 0, length);
+            Buffer.BlockCopy(_receiveBuffer, 0, tmpByteArray, 0, length);
 
             //处理收到的数据
-            dataCache.AddRange(tmpByteArray);
-            if (isProcessReceive == false)
-                processReceive();
+            _dataCache.AddRange(tmpByteArray);
+            if (_isProcessReceive == false)
+                ProcessReceive();
         }
         catch (Exception e)
         {
@@ -86,15 +102,15 @@ public class ClientPeer
     /// <summary>
     /// 处理收到的数据
     /// </summary>
-    private void processReceive()
+    private void ProcessReceive()
     {
-        isProcessReceive = true;
+        _isProcessReceive = true;
         //解析数据包
-        byte[] data = EncodeTool.DecodePacket(ref dataCache);
+        byte[] data = EncodeTool.DecodePacket(ref _dataCache);
 
         if (data == null)
         {
-            isProcessReceive = false;
+            _isProcessReceive = false;
             return;
         }
 
@@ -103,7 +119,7 @@ public class ClientPeer
         SocketMsgQueue.Enqueue(msg);
 
         //尾递归
-        processReceive();
+        ProcessReceive();
     }
 
     #endregion
@@ -113,12 +129,17 @@ public class ClientPeer
     public void Send(int opCode, int subCode, object value)
     {
         SocketMsg msg = new SocketMsg(opCode, subCode, value);
+        Send(msg);
+    }
+
+    public void Send(SocketMsg msg)
+    {
         byte[] data = EncodeTool.EncodeMsg(msg);
         byte[] packet = EncodeTool.EncodePacket(data);
 
         try
         {
-            socket.Send(packet);
+            _socket.Send(packet);
         }
         catch (Exception e)
         {
