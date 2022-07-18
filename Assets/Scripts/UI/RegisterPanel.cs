@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RegistPanel : UIBase
+public class RegisterPanel : UIBase
 {
     private void Awake()
     {
@@ -15,7 +15,7 @@ public class RegistPanel : UIBase
         switch (eventCode)
         {
             case UIEvent.REGIST_PANEL_ACTIVE:
-                setPanelActive((bool)message);
+                SetPanelActive((bool)message);
                 break;
             default:
                 break;
@@ -34,27 +34,27 @@ public class RegistPanel : UIBase
         _registerBtn = transform.Find("RegisterBtn").GetComponent<Button>();
         _closeBtn = transform.Find("CloseBtn").GetComponent<Button>();
         _accountInput = transform.Find("AccountInput").GetComponent<InputField>();
-        _passwordInput = transform.Find("PasswordInput").GetComponent<InputField>();
+        _passwordInput = transform.Find("PassWardInputField").GetComponent<InputField>();
         _repeatInput = transform.Find("RepeatInput").GetComponent<InputField>();
 
-        _closeBtn.onClick.AddListener(closeClick);
-        _registerBtn.onClick.AddListener(registClick);
+        _closeBtn.onClick.AddListener(OnCloseClick);
+        _registerBtn.onClick.AddListener(OnRegisterClick);
 
-        setPanelActive(false);
+        SetPanelActive(false);
     }
 
     public override void OnDestroy()
     {
         base.OnDestroy();
 
-        _closeBtn.onClick.RemoveListener(closeClick);
-        _registerBtn.onClick.RemoveListener(registClick);
+        _closeBtn.onClick.RemoveListener(OnCloseClick);
+        _registerBtn.onClick.RemoveListener(OnRegisterClick);
     }
 
     /// <summary>
     /// 注册按钮的点击事件处理
     /// </summary>
-    private void registClick()
+    private void OnRegisterClick()
     {
         if (string.IsNullOrEmpty(_accountInput.text))
             return;
@@ -70,8 +70,8 @@ public class RegistPanel : UIBase
         //TODO
     }
 
-    private void closeClick()
+    private void OnCloseClick()
     {
-        setPanelActive(false);
+        SetPanelActive(false);
     }
 }

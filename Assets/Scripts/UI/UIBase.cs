@@ -52,7 +52,7 @@ public class UIBase : MonoBase
     /// 设置面板显示
     /// </summary>
     /// <param name="active"></param>
-    protected void setPanelActive(bool active)
+    protected void SetPanelActive(bool active)
     {
         gameObject.SetActive(active);
     }

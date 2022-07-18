@@ -16,7 +16,7 @@ public class StartPanel : UIBase
         switch (eventCode)
         {
             case UIEvent.START_PANEL_ACTIVE:
-                setPanelActive((bool)message);
+                SetPanelActive((bool)message);
                 break;
             default:
                 break;
@@ -25,51 +25,51 @@ public class StartPanel : UIBase
 
     private Button _loginBtn;
     private Button _closeBtn;
-    private InputField _accountInput;
-    private InputField _passwordInput;
+    private InputField _accountInputField;
+    private InputField _passwordInputField;
 
     // Use this for initialization
     void Start()
     {
         _loginBtn = transform.Find("LoginBtn").GetComponent<Button>();
         _closeBtn = transform.Find("CloseBtn").GetComponent<Button>();
-        _accountInput = transform.Find("AccountInput").GetComponent<InputField>();
-        _passwordInput = transform.Find("PasswordInput").GetComponent<InputField>();
+        _accountInputField = transform.Find("AccountInput").GetComponent<InputField>();
+        _passwordInputField = transform.Find("PassWardInputField").GetComponent<InputField>();
 
-        _loginBtn.onClick.AddListener(loginClick);
-        _closeBtn.onClick.AddListener(closeClick);
+        _loginBtn.onClick.AddListener(OnLoginClick);
+        _closeBtn.onClick.AddListener(OnCloseClick);
 
         //面板需要默认隐藏
-        setPanelActive(false);
+        SetPanelActive(false);
     }
 
     public override void OnDestroy()
     {
         base.OnDestroy();
 
-        _loginBtn.onClick.RemoveListener(loginClick);
-        _closeBtn.onClick.RemoveListener(closeClick);
+        _loginBtn.onClick.RemoveListener(OnLoginClick);
+        _closeBtn.onClick.RemoveListener(OnCloseClick);
     }
 
     /// <summary>
     /// 登录按钮的点击事件处理
     /// </summary>
-    private void loginClick()
+    private void OnLoginClick()
     {
-        if (string.IsNullOrEmpty(_accountInput.text))
+        if (string.IsNullOrEmpty(_accountInputField.text))
             return;
-        if (string.IsNullOrEmpty(_passwordInput.text)
-            || _passwordInput.text.Length < 4
-            || _passwordInput.text.Length > 16)
+        if (string.IsNullOrEmpty(_passwordInputField.text)
+            || _passwordInputField.text.Length < 4
+            || _passwordInputField.text.Length > 16)
             return;
         
         //需要和服务器交互了
         //TODO
     }
 
-    private void closeClick()
+    private void OnCloseClick()
     {
-        setPanelActive(false);
+        SetPanelActive(false);
     }
 
 }
